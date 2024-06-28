@@ -5,12 +5,12 @@ const userSchema = new Schema(
     username: {
       type: String,
       required: true,
-      uique: true,
+      unique: true,
     },
     email: {
       type: String,
       required: true,
-      uique: true,
+      unique: true,
     },
     password: {
       type: String,
@@ -19,6 +19,10 @@ const userSchema = new Schema(
   },
   { timestamps: true }
 );
+
+// Ensure indexes are created
+userSchema.index({ username: 1 }, { unique: true });
+userSchema.index({ email: 1 }, { unique: true });
 
 userSchema.pre("save", async function (next) {
   const user = this;

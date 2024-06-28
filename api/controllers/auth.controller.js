@@ -1,18 +1,29 @@
 import User from '../models/user.model.js';
-export const signUp  = async(req, res)=>{
+import { errorHandler } from '../utils/error.js';
+export const signUp  = async(req, res, next)=>{
     try {
-        console.log(req.body);
         const {username, email, password} = req.body;
         const userExist = await User.findOne({username});
         if(userExist){
-            res.status(400).json({message:"User already exists try another username"});
+            // return next(errorHandler(409,"user already exists"));
+            // return res.status(400).json({message:"User already exists try another username"});
+            // return next(new Error("User already exists try another username"))
         }
         const newUser = new User({username, email, password});
         await newUser.save();
         res.status(201).json({message:"Registration successful"});
 
     } catch (error) {
-        console.error("Error in sign up controller", error.message);
-        res.status(500).json({error:"Server error"})
+        if (error.code === 11000) {
+            // Duplicate key error
+            // console.log(error.keyValue);
+            if (error.keyValue.username) {
+                return next(errorHandler(409,"username already taken!"));
+            }
+            if (error.keyValue.email) {
+                return next(errorHandler(409,"Email already taken!"));
+            }
+          }
+        next(error)
     }
 }
