@@ -1,5 +1,8 @@
 import User from '../models/user.model.js';
 import { errorHandler } from '../utils/error.js';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+// logic for user sign up
 export const signUp  = async(req, res, next)=>{
     try {
         const {username, email, password} = req.body;
@@ -27,3 +30,30 @@ export const signUp  = async(req, res, next)=>{
         next(error)
     }
 }
+
+// logic for user sign in
+
+export const signIn = async(req, res, next)=>{
+    try {
+        const {email, password} = req.body;
+        const user = await User.findOne({email});
+        if(!user){
+            return next(errorHandler(404,"Either email or password do not match"));
+        }
+        const comparedPassowrd = await bcrypt.compare(password,user.password);
+        if(!comparedPassowrd){
+            return next(errorHandler(404,"Credendials do not match"));
+        }
+        const token = jwt.sign({id:user._id},
+            process.env.SECRET,
+            {
+                expiresIn:"15d"
+            }
+        )
+        // another method to exclude the password from the rest of the attributes
+        const {password:pass, ...rest} = user._doc; 
+        res.cookie('token',token).status(200).json(rest);
+    } catch (error) {
+        next(error)
+    }
+} 
