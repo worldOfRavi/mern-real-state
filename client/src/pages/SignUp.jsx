@@ -32,6 +32,7 @@ export default function SignUp() {
           placeholder='username' 
           className='border p-3 rounded-lg' 
           name='username' 
+          required
           value={username} 
           onChange={(e) => setUsername(e.target.value)} 
         />
@@ -40,6 +41,7 @@ export default function SignUp() {
           placeholder='email' 
           className='border p-3 rounded-lg' 
           name='email' 
+          required
           value={email} 
           onChange={(e) => setEmail(e.target.value)} 
         />
@@ -49,6 +51,7 @@ export default function SignUp() {
             placeholder='password' 
             className='border p-3 rounded-lg w-full' 
             name='password' 
+            required
             value={password} 
             onChange={(e) => setPassword(e.target.value)} 
           />
