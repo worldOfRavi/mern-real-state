@@ -2,20 +2,19 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { BsFillEyeFill, BsFillEyeSlashFill } from "react-icons/bs";
 import useSignIn from '../hooks/useSignIn';
+import { useSelector } from 'react-redux';
 
 export default function SignIn() {
+  const { error, loading } = useSelector((state)=>state.user);
   const navigate = useNavigate();
-  const { loading, signin } = useSignIn();
+  const { signin } = useSignIn();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false); 
-  const [error, setError] = useState(null);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    signin({ email, password }).then(() => navigate("/")).catch((err) => {
-      setError(err.message);
-    });
+    signin({ email, password })
   }
 
   const togglePasswordVisibility = () => {
@@ -58,7 +57,7 @@ export default function SignIn() {
           className={`bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80 ${loading ? 'disabled' : ''}`} 
           disabled={loading}
         >
-          {loading ? "loading..." : "Sign Up"}
+          {loading ? "loading..." : "Sign In"}
         </button>
         <div className="flex gap-2 mt-5">
           <p>Dont have an account?</p>

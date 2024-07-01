@@ -1,10 +1,16 @@
 import React, { useState } from 'react'
+import { useDispatch } from 'react-redux';
+import {signInStart, signInSuccess, signInFailure} from "../redux/user/userSlice";
+import { useNavigate } from 'react-router-dom';
 
 const useSignIn = () => {
-  const [loading, setLoading]  = useState(false);
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
   const signin = async({email, password})=>{
-    setLoading(true);
+   
+
     try {
+        dispatch(signInStart());
         const res = await fetch("/api/auth/signin",{
             method:"POST",
             headers:{
@@ -15,17 +21,20 @@ const useSignIn = () => {
 
         const data = await res.json();
         if(data.success=== false) {
-            throw new Error(data.message)
+             dispatch(signInFailure(data.message));
+             return;
         }
-        return data
-    } catch (error) {
-        throw new Error(error.message);
 
-    }finally{
-        setLoading(false)
+        dispatch(signInSuccess(data));
+        navigate("/");
+        
+        
+    } catch (error) {
+        dispatch(signInFailure(error.message));
+
     }
   }
-  return { loading, signin}
+  return {signin}
 }
 
 export default useSignIn
