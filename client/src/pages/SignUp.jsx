@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import useSignUp from '../hooks/useSignUp';
 import { BsFillEyeFill, BsFillEyeSlashFill } from "react-icons/bs";
+import Oauth from '../components/Oauth';
 
 export default function SignUp() {
   const navigate = useNavigate();
@@ -69,6 +70,7 @@ export default function SignUp() {
         >
           {loading ? "loading..." : "Sign Up"}
         </button>
+        <Oauth />
         <div className="flex gap-2 mt-5">
           <p>Have an account?</p>
           <Link to={"/sign-in"} className='text-blue-700 '>Sign-In</Link>

@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { BsFillEyeFill, BsFillEyeSlashFill } from "react-icons/bs";
 import useSignIn from '../hooks/useSignIn';
 import { useSelector } from 'react-redux';
+import Oauth from '../components/Oauth';
 
 export default function SignIn() {
   const { error, loading } = useSelector((state)=>state.user);
@@ -59,6 +60,7 @@ export default function SignIn() {
         >
           {loading ? "loading..." : "Sign In"}
         </button>
+        <Oauth />
         <div className="flex gap-2 mt-5">
           <p>Dont have an account?</p>
           <Link to={"/sign-up"} className='text-blue-700 '>Sign-Up</Link>
