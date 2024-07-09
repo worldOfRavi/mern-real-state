@@ -4,8 +4,11 @@ import {getDownloadURL, getStorage, ref, uploadBytesResumable} from "firebase/st
 import { app } from "../firebase";
 import useUpdate from "../hooks/useUpdate";
 import useDelete from "../hooks/useDelete";
+import useUserSignout from "../hooks/useUserSignout";
+
 
 export default function Profile() {
+  const {userSignout} =  useUserSignout()
   const {updateUser, updated} = useUpdate();
   const {deleteUser} = useDelete();
   const {currentUser, error, loading} = useSelector((state)=>state.user);
@@ -98,7 +101,7 @@ export default function Profile() {
         <span className="text-red-700 cursor-pointer" onClick={()=>deleteUser(currentUser._id)}>
           {loading ? "Loading..." : "Delete account"}
         </span>
-        <span className="text-red-700 cursor-pointer">Sign out</span>
+        <span className="text-red-700 cursor-pointer" onClick={()=>userSignout()} >Sign out</span>
       </div>
         <p className="text-red-700 mt-5">{error ? error : ""}</p>
         <p className="text-green-700 mt-5">{updated ? "User info updated successfully" : ""}</p>
