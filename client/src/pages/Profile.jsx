@@ -3,9 +3,11 @@ import { useSelector } from "react-redux"
 import {getDownloadURL, getStorage, ref, uploadBytesResumable} from "firebase/storage";
 import { app } from "../firebase";
 import useUpdate from "../hooks/useUpdate";
+import useDelete from "../hooks/useDelete";
 
 export default function Profile() {
   const {updateUser, updated} = useUpdate();
+  const {deleteUser} = useDelete();
   const {currentUser, error, loading} = useSelector((state)=>state.user);
   const fileRef = useRef(null);
   const [file, setFile] = useState(undefined);
@@ -93,7 +95,9 @@ export default function Profile() {
         </button>
       </form>
       <div className="flex justify-between mt-5">
-        <span className="text-red-700 cursor-pointer">Delete account</span>
+        <span className="text-red-700 cursor-pointer" onClick={()=>deleteUser(currentUser._id)}>
+          {loading ? "Loading..." : "Delete account"}
+        </span>
         <span className="text-red-700 cursor-pointer">Sign out</span>
       </div>
         <p className="text-red-700 mt-5">{error ? error : ""}</p>
