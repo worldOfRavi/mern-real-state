@@ -2,9 +2,11 @@ import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux"
 import {getDownloadURL, getStorage, ref, uploadBytesResumable} from "firebase/storage";
 import { app } from "../firebase";
+import useUpdate from "../hooks/useUpdate";
 
 export default function Profile() {
-  const {currentUser} = useSelector((state)=>state.user);
+  const {updateUser, updated} = useUpdate();
+  const {currentUser, error, loading} = useSelector((state)=>state.user);
   const fileRef = useRef(null);
   const [file, setFile] = useState(undefined);
   const [filePrec, setFilePrec]  = useState(0);
@@ -42,11 +44,23 @@ export default function Profile() {
 
     )
   }
+
+  // logic to handle the change
+  const handleChange = (e)=>{
+    setFormData({...formData, [e.target.id]: e.target.value })
+  }
+  
+  // logic for submit handling
+  const handleSubmit = (e)=>{
+    e.preventDefault();
+    updateUser(formData, currentUser._id);
+    
+  }
   return (
     
     <div className="p-3 max-w-lg mx-auto">
       <h1 className='text-center text-3xl font-semibold my-4'>Profile</h1>
-      <form className="flex flex-col gap-4">
+      <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
       <input onChange={(e)=>setFile(e.target.files[0])} type="file"  ref={fileRef} hidden accept="image/*"/>
         <img onClick={()=>fileRef.current.click()} src={formData.avatar || currentUser.avatar} alt="profile"
         className="rounded-full w-24 h-24 self-center object-cover cursor-pointer mt-2" />
@@ -61,20 +75,29 @@ export default function Profile() {
           }
         </p>
         <input type="text" placeholder="username" id="username"
+        onChange={handleChange}
+        defaultValue={currentUser.username}
         className="border p-3 rounded-lg" />
 
         <input type="email" placeholder="email" id="email"
+        onChange={handleChange}
+        defaultValue={currentUser.email}
         className="border p-3 rounded-lg" />
 
         <input type="password" placeholder="password" id="password"
+        onChange={handleChange}
         className="border p-3 rounded-lg" />
         <button className="bg-slate-700 text-white rounded-lg
-        p-3 uppercase hover:opacity-80 disabled:opacity-70">Update</button>
+        p-3 uppercase hover:opacity-80 disabled:opacity-70">
+          {loading? "Loading..." : "Update"}
+        </button>
       </form>
       <div className="flex justify-between mt-5">
         <span className="text-red-700 cursor-pointer">Delete account</span>
         <span className="text-red-700 cursor-pointer">Sign out</span>
       </div>
+        <p className="text-red-700 mt-5">{error ? error : ""}</p>
+        <p className="text-green-700 mt-5">{updated ? "User info updated successfully" : ""}</p>
     </div>
   )
 }

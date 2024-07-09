@@ -4,7 +4,7 @@ import { errorHandler } from "../utils/error.js"
 export const updateUser = async(req, res, next)=>{
     try {
         const id = req.params.id;
-        if(req.user.id !== id) return next(errorHandler(401,"You can only updte your own account!"));
+        if(req.user.id !== id) return next(errorHandler(401,"You can only update your own account!"));
         const {username, email, password, avatar} = req.body;
 
         // no need to hash password for my app as it is done in my user model
