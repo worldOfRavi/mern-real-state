@@ -5,6 +5,7 @@ import { app } from "../firebase";
 import useUpdate from "../hooks/useUpdate";
 import useDelete from "../hooks/useDelete";
 import useUserSignout from "../hooks/useUserSignout";
+import {Link} from 'react-router-dom';
 
 
 export default function Profile() {
@@ -96,6 +97,8 @@ export default function Profile() {
         p-3 uppercase hover:opacity-80 disabled:opacity-70">
           {loading? "Loading..." : "Update"}
         </button>
+        <Link className="bg-green-700 p-3 rounded-lg text-white uppercase
+        text-center hover:opacity-85" to={"/create-listing"}>create listing</Link>
       </form>
       <div className="flex justify-between mt-5">
         <span className="text-red-700 cursor-pointer" onClick={()=>deleteUser(currentUser._id)}>
