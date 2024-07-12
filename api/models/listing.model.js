@@ -17,7 +17,7 @@ const listingSchema = new Schema({
         type:Number,
         required:true
     },
-    discountPrice:{
+    discountedPrice:{
         type:Number,
         required:true
     },
@@ -45,7 +45,7 @@ const listingSchema = new Schema({
         type:Boolean,
         required:true
     },
-    imageUrls:{
+    imageUrl:{
         type:Array,
         required:true
     },
