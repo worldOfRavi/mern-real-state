@@ -1,5 +1,7 @@
 import User from "../models/user.model.js";
-import { errorHandler } from "../utils/error.js"
+import Listing from "../models/listing.model.js";
+import { errorHandler } from "../utils/error.js";
+import bcrypt from 'bcrypt';
 
 export const updateUser = async(req, res, next)=>{
     try {
@@ -11,7 +13,11 @@ export const updateUser = async(req, res, next)=>{
         const updateFields = {};
         if (username) updateFields.username = username;
         if (email) updateFields.email = email;
-        if (password) updateFields.password = password;
+        if (password){
+            const salt = await bcrypt.genSaltSync(10);
+            const hashedPassword = await bcrypt.hash(password,salt)
+            updateFields.password = hashedPassword;
+        } 
         if (avatar) updateFields.avatar = avatar;
     
         const updatedUser = await User.findByIdAndUpdate(
@@ -35,6 +41,21 @@ export const deleteUser = async(req, res, next)=>{
         await User.findByIdAndDelete(req.params.id);
         res.clearCookie('token');
         res.status(200).json("User deleted successfully!");
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const getUserListing = async(req, res, next)=>{
+    try {
+        const id = req.params.id;
+
+        if(id !== req.user.id){
+            return next(errorHandler(401,"You can view to your listings only..."))
+        }
+        const listing = await Listing.find({userRef:id});
+        res.status(200).json(listing)
+
     } catch (error) {
         next(error)
     }
