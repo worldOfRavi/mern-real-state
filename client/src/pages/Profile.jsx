@@ -6,6 +6,7 @@ import useUpdate from "../hooks/useUpdate";
 import useDelete from "../hooks/useDelete";
 import useUserSignout from "../hooks/useUserSignout";
 import {Link} from 'react-router-dom';
+import ShowListing from "./ShowListing";
 
 
 export default function Profile() {
@@ -18,6 +19,7 @@ export default function Profile() {
   const [filePrec, setFilePrec]  = useState(0);
   const [fileUplaodError, setFileUplaodError] = useState(false);
   const [formData, setFormData]  = useState({});
+  const [showListing, setShowListing] = useState(false)
   useEffect(()=>{
     if(file){
       handleFileUpload(file);
@@ -108,6 +110,13 @@ export default function Profile() {
       </div>
         <p className="text-red-700 mt-5">{error ? error : ""}</p>
         <p className="text-green-700 mt-5">{updated ? "User info updated successfully" : ""}</p>
+
+        <div className="text-green-700 text-center cursor-pointer" onClick={()=>setShowListing(true)}>Show Listings</div>
+
+
+{/* show listing */}
+{showListing && <ShowListing />}
+
     </div>
   )
 }
