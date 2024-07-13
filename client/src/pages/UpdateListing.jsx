@@ -1,15 +1,17 @@
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { app } from "../firebase";
-import useCreateListing from "../hooks/useCreateListing";
 import { useSelector } from "react-redux";
-import {useNavigate} from 'react-router-dom'
+import {useNavigate, useParams} from 'react-router-dom'
+import useUpdateListing from "../hooks/useUpdateListing";
 
 
 const UpdateListing = () => {
+  const {loading, updateListing}  = useUpdateListing();
+  const {id} = useParams();
     const navigate = useNavigate();
     const {currentUser} = useSelector((state)=>state.user);
-    const {loading, createListing} = useCreateListing();
+    // const {loading, createListing} = useCreateListing();
     const [files, setFiles] = useState([]);
     const [formData, setFormData] = useState({
         imageUrl:[],
@@ -30,6 +32,16 @@ const UpdateListing = () => {
     const [imageUploadError, setImageUploadError] = useState(false);
     const [uploading, setUploading] = useState(false);
     const[error, setError] = useState("");
+
+    // logic to get the respective listing
+    useEffect(()=>{
+      const getOneListing = async(id)=>{
+        const res = await fetch(`/api/listing/get/${id}`);
+        const data = await res.json();
+        setFormData(data)
+      }
+      getOneListing(id);
+    },[])
 
     // logic for image upload
     const handleImageUpload = ()=>{
@@ -109,6 +121,8 @@ const UpdateListing = () => {
         })
     }
 
+    
+
     // function to handle the form submission
     const handleSubmit = (e) =>{
         e.preventDefault();
@@ -118,9 +132,9 @@ const UpdateListing = () => {
         if(+formData.discountedPrice > +formData.regularPrice){
             return setError("Discounted price must me lesser than the regular price");
         }
-        createListing({formData}).then((data)=>{
+        updateListing(id,formData).then((data)=>{
             if(data.success){
-                navigate(`/listing${data.data._id}`)
+                navigate(`/listing/${data.data._id}`)
             }else{setError(data.message)}
         }).catch((err)=>{
             console.log("Error",err.message);
@@ -130,7 +144,7 @@ const UpdateListing = () => {
   return (
     <main className="p-3 max-w-4xl mx-auto">
       <h1 className="font-semibold text-3xl text-center my-7">
-        Create a Listing
+        Update a Listing
       </h1>
       <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4">
         <div className="flex flex-1 flex-col gap-4">
@@ -296,7 +310,7 @@ const UpdateListing = () => {
                 </div>
             ))
             }
-          <button disabled={loading || uploading} className="uppercase p-3 border bg-slate-700 text-white rounded-lg hover:opacity-90 disabled:opacity-80 ">{loading?"creating...": "create listing"}</button>
+          <button disabled={loading || uploading} className="uppercase p-3 border bg-slate-700 text-white rounded-lg hover:opacity-90 disabled:opacity-80 ">{loading?"updating...": "update listing"}</button>
           <p className="text-xs text-red-700">{error && error}</p>
         </div>
       </form>   
@@ -305,3 +319,5 @@ const UpdateListing = () => {
 };
 
 export default UpdateListing;
+
+

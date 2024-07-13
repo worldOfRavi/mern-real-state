@@ -111,7 +111,7 @@ export default function Profile() {
         <p className="text-red-700 mt-5">{error ? error : ""}</p>
         <p className="text-green-700 mt-5">{updated ? "User info updated successfully" : ""}</p>
 
-        <div className="text-green-700 text-center cursor-pointer" onClick={()=>setShowListing(true)}>Show Listings</div>
+        <div className="text-green-700 text-center cursor-pointer" onClick={()=>setShowListing(!showListing)}>Show Listings</div>
 
 
 {/* show listing */}

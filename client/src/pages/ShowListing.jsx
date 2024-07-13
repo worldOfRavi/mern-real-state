@@ -8,7 +8,6 @@ const ShowListing = () => {
     useEffect(()=>{
         showListing();
     },[])
-    console.log(listing);
 
     const deleteListing = async(id)=>{
         try {
@@ -44,7 +43,9 @@ const ShowListing = () => {
                         </div>
                         <div className="">
                             <p className='text-red-700 cursor-pointer' onClick={()=>deleteListing(list._id)}>DELETE</p>
+                            <Link to={`/update/${list._id}`}>
                             <p className='text-green-700 cursor-pointer text-center'>EDIT</p>
+                            </Link>
                         </div>
                     </div>
                 ))}

@@ -120,7 +120,7 @@ const CreateListing = () => {
         }
         createListing({formData}).then((data)=>{
             if(data.success){
-                navigate(`/listing${data.data._id}`)
+                navigate(`/listing/${data.data._id}`)
             }else{setError(data.message)}
         }).catch((err)=>{
             console.log("Error",err.message);
