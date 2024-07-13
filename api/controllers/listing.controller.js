@@ -26,3 +26,21 @@ export const deleteListing = async(req, res, next)=>{
         next(error)
     }
 }
+
+export const updateListing = async(req, res, next)=>{
+    try {
+        const id = req.params.id;
+        const listing = await Listing.findOne({_id:id});
+        if(!listing) return next(errorHandler(404,"No listing found"));
+
+        if(listing.userRef !== req.user.id) return next(errorHandler(401, "You can only modify your listing"));
+        const updatedListing = await Listing.findByIdAndUpdate(
+            id,
+            req.body,
+            {new:true}
+        )
+        res.status(201).json(updatedListing);
+    } catch (error) {
+        next(error)
+    }
+}
