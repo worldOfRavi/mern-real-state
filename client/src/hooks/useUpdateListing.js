@@ -3,7 +3,6 @@ import React, { useState } from 'react'
 const useUpdateListing = () => {
   const [loading, setLoading] = useState(false);
   const updateListing = async(id,formData)=>{
-    console.log(formData);
     setLoading(true)
     try {
         const res = await fetch(`/api/listing/update/${id}`,{
