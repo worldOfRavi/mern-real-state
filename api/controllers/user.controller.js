@@ -60,3 +60,18 @@ export const getUserListing = async(req, res, next)=>{
         next(error)
     }
 }
+
+
+export const getUser = async(req, res, next)=>{
+    try {
+        const id = req.params.id;
+        const user = await User.findOne({_id:id},{password:0});
+        if(!user) return next(errorHandler(404,"No use is available"))
+        
+
+        res.status(200).json(user)
+
+    } catch (error) {
+        next(error)
+    }
+}
