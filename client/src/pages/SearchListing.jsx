@@ -165,4 +165,4 @@ const SearchListing = () => {
   )
 }
 
-export default SearchListing;
+export default SearchListing
