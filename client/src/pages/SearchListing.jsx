@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
+import ListingItem from '../components/ListingItem';
+
 
 const SearchListing = () => {
   const navigate = useNavigate();
@@ -46,8 +48,8 @@ const SearchListing = () => {
   }
 
   const [loading, setLoading] = useState(false);
-  const [lisitng, setListing] = useState([]);
-  console.log(lisitng);
+  const [listing, setListing] = useState([]);
+  console.log(listing);
   useEffect(()=>{
     const urlParams = new URLSearchParams(location.search);
     const searchTermFromUrl = urlParams.get('searchTerm');
@@ -158,8 +160,17 @@ const SearchListing = () => {
             <button className='bg-slate-700 p-3 rounded-lg text-white hover:opacity-90 uppercase'>Search</button>
         </form>
       </div>
-      <div className="">
-        <h1 className='text-3xl font-semibold border-b p-3 mt-5'>Listing result</h1>
+      <div className="flex-1">
+        <h1 className='text-3xl font-semibold border-b p-3 mt-5'>Listing result:</h1>
+        <div className="p-7 flex flex-wrap gap-4">
+          {!loading && listing.length <1 && <p className='text-slate-700 text-xl'>No listing found!</p> }
+          {loading && <p className='text-center w-full text-xl'>Loading...</p>}
+          {!loading && listing.length>0 && 
+          listing.map((listing, index)=>(
+            <ListingItem key={index} listing={listing} />
+          ))
+          }
+        </div>
       </div>
     </div>
   )
