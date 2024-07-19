@@ -4,6 +4,7 @@ import ListingItem from '../components/ListingItem';
 
 
 const SearchListing = () => {
+  const [showMore, setShowMore] = useState(false)
   const navigate = useNavigate();
   const [sidebardata, setSidebardata] = useState({
     searchTerm:"",
@@ -72,6 +73,7 @@ const SearchListing = () => {
     }
     const getListings = async()=>{
       try {
+        setShowMore(false)
         setLoading(true);
         const searchQuery = urlParams.toString();
         const res = await fetch(`/api/listing/get?${searchQuery}`);
@@ -80,6 +82,9 @@ const SearchListing = () => {
         if(data.success === false){
           throw new Error(data.message)
         }
+        if(data.length > 8){
+          setShowMore(true);
+        }
         setListing(data)
       } catch (error) {
         console.log(error.message);
@@ -87,6 +92,19 @@ const SearchListing = () => {
     }
     getListings();
   },[location.search])
+
+  const handleShowMore = async()=>{
+    const startIndex = listing.length;
+    const urlParams = new URLSearchParams(location.search);
+    urlParams.set('startIndex', startIndex);
+    const searchQuery = urlParams.toString();
+    const res = await fetch(`/api/listing/get/?${searchQuery}`);
+    const data = await res.json();
+    if(data.length<9){
+      setShowMore(false)
+    }
+    setListing([...listing, ...data])
+  }
   return (
     <div className='flex flex-col md:flex-row'>
       <div className="p-7 border-b-2 md:border-r-2 md:min-h-screen">
@@ -171,6 +189,7 @@ const SearchListing = () => {
           ))
           }
         </div>
+        {showMore && <button type='button' className='text-green-700 hover:underline w-full self-center mb-6'  onClick={handleShowMore} >Show More</button> }
       </div>
     </div>
   )

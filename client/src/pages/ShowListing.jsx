@@ -29,19 +29,19 @@ const ShowListing = () => {
         {listing.length>0 ? (<div>
         <h1 className="font-semibold text-center my-6">Your Listings</h1>
         {loading ? <p>Loading...</p> : (
-            <div className="flex max-w-lg">
+            <div className="flex flex-col">
                 {listing.map((list, index)=>(
                     <div key={index} className="border rounded-md flex gap-2 my-2 justify-between items-center p-2">
                         <div className="flex items-center gap-2">
-                        <Link to={`/listing/${list._id}`} className='flex-1/2'>
+                        <Link to={`/listing/${list._id}`} className=''>
 
                             <img src={list.imageUrl[0]} className='w-20 h-20 object-contain rounded-sm' />
                         </Link>
-                        <Link to={`/listing/${list._id}`} className='truncate flex-1/2'>
+                        <Link to={`/listing/${list._id}`} className='max-w-[200px]'>
                             <h1 className='font-semibold hover:underline truncate '>{list.name}</h1>
                         </Link>
                         </div>
-                        <div className="flex-1">
+                        <div className=" ">
                             <p className='text-red-700 cursor-pointer' onClick={()=>deleteListing(list._id)}>DELETE</p>
                             <Link to={`/update/${list._id}`}>
                             <p className='text-green-700 cursor-pointer text-center'>EDIT</p>
