@@ -9,7 +9,6 @@ export default function Home() {
   const [offerListing, setOfferListing] = useState([]);
   const [saleListing, setSaleListing] = useState([]);
   const [rentListing, setRentListing] = useState([]);
-  console.log(offerListing);
   SwiperCore.use([Navigation]);
   useEffect(() => {
     // offer listing data
