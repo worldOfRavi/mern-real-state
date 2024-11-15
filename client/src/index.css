@@ -7,3 +7,9 @@ body{
     /* height: 100vh; */
     background-color: rgb(241, 245, 241);
 }
+
+@media (max-width:640px) {
+    .small_screen{
+        display: none;
+    }
+}
